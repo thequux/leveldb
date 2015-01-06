@@ -1,0 +1,94 @@
+project leveldb
+      : requirements
+        <cflags>-std=c++0x
+	<cflags>-fno-builtin-memcmp
+	<target-os>linux:<define>OS_LINUX
+	<target-os>linux:<define>LEVELDB_PLATFORM_POSIX
+	<target-os>linux:<define>LEVELDB_ATOMIC_PRESENT
+	<threading>single:<define>LEVELDB_NON_THREADSAFE
+	<include>include
+	<include>.
+	# <threading>multi
+      :	usage-requirements
+	<include>include
+      ;
+
+import testing ;
+
+variant profiling : release : <debug-symbols>on ;
+
+lib leveldb
+      :	db/builder.cc
+	db/c.cc
+	db/dbformat.cc
+	db/db_impl.cc
+	db/db_iter.cc
+	db/dumpfile.cc
+	db/filename.cc
+	db/log_reader.cc
+	db/log_writer.cc
+	db/memtable.cc
+	db/repair.cc
+	db/table_cache.cc
+	db/version_edit.cc
+	db/version_set.cc
+	db/write_batch.cc
+	table/block_builder.cc
+	table/block.cc
+	table/filter_block.cc
+	table/format.cc
+	table/iterator.cc
+	table/merger.cc
+	table/table_builder.cc
+	table/table.cc
+	table/two_level_iterator.cc
+	util/arena.cc
+	util/bloom.cc
+	util/cache.cc
+	util/coding.cc
+	util/comparator.cc
+	util/crc32c.cc
+	util/env.cc
+	util/env_posix.cc
+	util/filter_policy.cc
+	util/hash.cc
+	util/histogram.cc
+	util/logging.cc
+	util/options.cc
+	util/status.cc
+	port/port_posix.cc
+    ;
+lib memenv : leveldb  helpers/memenv/memenv.cc ;
+alias testutil : util/testutil.cc ;
+alias test-harness : testutil util/testharness.cc ;
+exe db_bench : db/db_bench.cc testutil leveldb ;
+exe db_bench_sqlite3 : doc/bench/db_bench_sqlite3.cc testutil leveldb : <library>sqlite3 ;
+
+lib sqlite3 : : <name>sqlite3 ;
+
+# TODO: build Kyoto cabinet benchmark
+exe leveldbutil : db/leveldb_main.cc leveldb ;
+
+unit-test autocompact_test : db/autocompact_test.cc test-harness leveldb ;
+unit-test db_test : db/db_test.cc test-harness leveldb ;
+unit-test version_set_test : db/version_set_test.cc test-harness leveldb ;
+unit-test version_edit_test : db/version_edit_test.cc test-harness leveldb ;
+unit-test corruption_test : db/corruption_test.cc test-harness leveldb ;
+unit-test dbformat_test : db/dbformat_test.cc test-harness leveldb ;
+unit-test log_test : db/log_test.cc test-harness leveldb ;
+unit-test write_batch_test : db/write_batch_test.cc test-harness leveldb ;
+unit-test filename_test : db/filename_test.cc test-harness leveldb ;
+unit-test fault_injection_test : db/fault_injection_test.cc test-harness leveldb ;
+unit-test skiplist_test : db/skiplist_test.cc test-harness leveldb ;
+unit-test memenv_test : helpers/memenv/memenv_test.cc memenv test-harness leveldb ;
+unit-test issue178_test : issues/issue178_test.cc test-harness leveldb ;
+unit-test issue200_test : issues/issue200_test.cc test-harness leveldb ;
+unit-test table_test : table/table_test.cc test-harness leveldb ;
+unit-test filter_block_test : table/filter_block_test.cc test-harness leveldb ;
+unit-test bloom_test : util/bloom_test.cc test-harness leveldb ;
+unit-test env_test : util/env_test.cc test-harness leveldb ;
+unit-test coding_test : util/coding_test.cc test-harness leveldb ;
+unit-test crc32c_test : util/crc32c_test.cc test-harness leveldb ;
+unit-test hash_test : util/hash_test.cc test-harness leveldb ;
+unit-test cache_test : util/cache_test.cc test-harness leveldb ;
+unit-test arena_test : util/arena_test.cc test-harness leveldb ;
