@@ -5,10 +5,9 @@ project leveldb
 	<target-os>linux:<define>OS_LINUX
 	<target-os>linux:<define>LEVELDB_PLATFORM_POSIX
 	<target-os>linux:<define>LEVELDB_ATOMIC_PRESENT
-	<threading>single:<define>LEVELDB_NON_THREADSAFE
 	<include>include
 	<include>.
-	# <threading>multi
+	<threading>multi
       :	usage-requirements
 	<include>include
       ;
