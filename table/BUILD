@@ -18,6 +18,7 @@ cc_test(
     srcs = ["table_test.cc"],
     deps = [
         ":table",
+        "//util:testutil",
         "//db",
     ],
 )
@@ -27,6 +28,7 @@ cc_test(
     srcs = ["filter_block_test.cc"],
     deps = [
         ":table",
+        "//util:testutil",
         "//db",
     ],
 )

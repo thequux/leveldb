@@ -4,7 +4,10 @@ cc_library(
     name = "util",
     srcs = glob(
         ["*.cc"],
-        exclude = glob(["*_test.cc"]),
+        exclude = glob(["*_test.cc"]) + [
+            "testutil.cc",
+            "env_windows.cc",
+        ],
     ),
     hdrs = glob(["*.h"]),
     linkopts = select({
@@ -20,65 +23,75 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = "testutil",
+    srcs = ["testutil.cc"],
+    hdrs = ["testutil.h"],
+    deps = [
+        "@com_google_googletest//:gtest",
+        "//helpers/memenv",
+    ],
+)
+
 cc_test(
     name = "arena_test",
     srcs = ["arena_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "bloom_test",
     srcs = ["bloom_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "cache_test",
     srcs = ["cache_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "coding_test",
     srcs = ["coding_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "crc32c_test",
     srcs = ["crc32c_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "env_posix_test",
     srcs = ["env_posix_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "env_test",
     srcs = ["env_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "hash_test",
     srcs = ["hash_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "logging_test",
     srcs = ["logging_test.cc"],
-    deps = [":util"],
+    deps = [":util", ":testutil"],
 )
 
 cc_test(
     name = "status_test",
     srcs = ["status_test.cc"],
     deps = [
-        ":util",
+        ":util", ":testutil",
         "//include/leveldb",
     ],
 )
